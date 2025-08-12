@@ -147,7 +147,7 @@ class HTTPClient implements ZammadHTTPClientInterface
         }
 
         if ($this->client) {
-            $this->client->withOptions($symfonyClientOptions);
+            $this->client = $this->client->withOptions($symfonyClientOptions);
         } else {
             $this->client = SymfonyHttpClient::create($symfonyClientOptions);
         }
