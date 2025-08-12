@@ -17,12 +17,11 @@ class HTTPClient implements ZammadHTTPClientInterface
 {
     private $base_url;
     private $authentication_options;
-    private HttpClientInterface $client;
 
     /**
      * Creates an HTTPClient object.
      *
-     * @paramarray $options                    Options to use for client:
+     * @param array $options                    Options to use for client:
      *                                          $options = [
      *                                              // URL of Zammad
      *                                              'url' => 'https://my.zammad.com:3000',
@@ -46,10 +45,8 @@ class HTTPClient implements ZammadHTTPClientInterface
      *                                              // You can also give a path to a CA bundle file.
      *                                              'verify' => true,
      *                                          ];
-     *
-     * @return Object                           HTTPClient object
      */
-    public function __construct( array $options = [] )
+    public function __construct(array $options = [], private ?HttpClientInterface $client = null)
     {
         //
         // Check options
@@ -139,12 +136,21 @@ class HTTPClient implements ZammadHTTPClientInterface
             $verifySsl = $options['verify'];
         }
 
-        $this->client = SymfonyHttpClient::create([
-            'base_uri'         => $this->base_url,
-            'timeout'          => $timeout,
-            'verify_peer'      => $verifySsl,
-            'verify_host'      => $verifySsl,
-        ]);
+        $symfonyClientOptions = [
+            'base_uri' => $this->base_url,
+            'timeout'  => $timeout,
+            'verify_peer' => $verifySsl,
+            'verify_host' => $verifySsl,
+        ];
+        if ($debug) {
+            $symfonyClientOptions['debug'] = true;
+        }
+
+        if ($this->client) {
+            $this->client->withOptions($symfonyClientOptions);
+        } else {
+            $this->client = SymfonyHttpClient::create($symfonyClientOptions);
+        }
     }
 
     /**

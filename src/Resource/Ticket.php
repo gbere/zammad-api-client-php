@@ -23,7 +23,7 @@ class Ticket extends AbstractResource
     /**
      * Fetches TicketArticle objects of this Ticket object.
      *
-     * @returnarray of TicketArticle objects   Returns array of ZammadAPIClient\Resource\TicketArticle objects or an empty array.
+     * @return array of TicketArticle objects   Returns array of ZammadAPIClient\Resource\TicketArticle objects or an empty array.
      */
     public function getTicketArticles()
     {

@@ -13,7 +13,7 @@ class Client
 {
     const API_VERSION = 'v1';
 
-    private $http_client;
+    private HttpClientInterface $http_client;
     private $last_response;
     private $options;
     private $on_behalf_of_user;
@@ -21,7 +21,7 @@ class Client
     /**
      * Creates a Client object.
      *
-     * @paramarray $options                    Options to use for client:
+     * @param array $options                    Options to use for client:
      *                                          $options = [
      *                                              // URL of Zammad
      *                                              'url' => 'https://my.zammad.com:3000',
@@ -41,10 +41,6 @@ class Client
      *                                              // Optional: Enable debug output
      *                                              debug => true,
      *                                          ];
-     *
-     * @param HTTPClientInterface $client       Optional, pass in custom HTTP client.
-     *
-     * @return Object                           Client object
      */
     public function __construct( array $options = [], HTTPClientInterface $client = null)
     {
@@ -57,7 +53,7 @@ class Client
      *
      * @param String $method         GET, PUT, POST, DELETE
      * @param String $url            E. g. tickets/1
-     * @paramarray  $url_parameters E. g. [ 'expand' => true, ]
+     * @param array  $url_parameters E. g. [ 'expand' => true, ]
      *
      * @return Response object
      */
@@ -95,7 +91,7 @@ class Client
      * Executes GET request.
      *
      * @param String $url            E. g. tickets/1
-     * @paramarray  $url_parameters E. g. [ 'expand' => true, ]
+     * @param array  $url_parameters E. g. [ 'expand' => true, ]
      *
      * @return Response object
      */
@@ -114,8 +110,8 @@ class Client
      * Executes POST request.
      *
      * @param String $url            E. g. tickets/1
-     * @paramarray $data           array with data to send as JSON.
-     * @paramarray  $url_parameters E. g. [ 'expand' => true, ]
+     * @param array $data           array with data to send as JSON.
+     * @param array  $url_parameters E. g. [ 'expand' => true, ]
      *
      * @return Response object
      */
@@ -135,8 +131,8 @@ class Client
      * Executes PUT request.
      *
      * @param String $url            E. g. tickets/1
-     * @paramarray $data           array with data to send as JSON.
-     * @paramarray  $url_parameters E. g. [ 'expand' => true, ]
+     * @param array $data           array with data to send as JSON.
+     * @param array  $url_parameters E. g. [ 'expand' => true, ]
      *
      * @return Response object
      */
@@ -156,7 +152,7 @@ class Client
      * Executes DELETE request.
      *
      * @param String $url            E. g. tickets/1
-     * @paramarray  $url_parameters E. g. [ 'expand' => true, ]
+     * @param array  $url_parameters E. g. [ 'expand' => true, ]
      *
      * @return Response object
      */
@@ -176,7 +172,7 @@ class Client
      *
      * @param String $resource_type         ResourceType::TICKET
      *
-     * @return Object                       Resource object
+     * @return object                       Resource object
      */
     public function resource($resource_type)
     {
@@ -207,7 +203,7 @@ class Client
     /**
      * Stores Response object as last Response object.
      *
-     * @param Object $response              Response object to store.
+     * @param object $response              Response object to store.
      */
     private function setLastResponse( Response $response )
     {

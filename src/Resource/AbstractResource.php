@@ -68,7 +68,7 @@ abstract class AbstractResource
     /**
      * Fetches remote data that was returned by Zammad.
      *
-     * @return arrayarray with the object's data. Might be empty.
+     * @return array array with the object's data. Might be empty.
      */
     protected function getRemoteData()
     {
