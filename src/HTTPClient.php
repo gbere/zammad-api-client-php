@@ -7,12 +7,17 @@
 
 namespace ZammadAPIClient;
 
-use Psr\Http\Message\ResponseInterface;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Symfony\Component\HttpClient\HttpClient as SymfonyHttpClient;
+use Symfony\Contracts\HttpClient\ResponseInterface;
+use ZammadAPIClient\HTTPClientInterface as ZammadHTTPClientInterface;
 
-class HTTPClient extends \GuzzleHttp\Client implements HTTPClientInterface
+class HTTPClient implements ZammadHTTPClientInterface
 {
     private $base_url;
     private $authentication_options;
+    private HttpClientInterface $client;
 
     /**
      * Creates an HTTPClient object.
@@ -134,35 +139,35 @@ class HTTPClient extends \GuzzleHttp\Client implements HTTPClientInterface
             $verifySsl = $options['verify'];
         }
 
-        // Execute constructor of base class
-        parent::__construct([
+        $this->client = SymfonyHttpClient::create([
             'base_uri'         => $this->base_url,
             'timeout'          => $timeout,
-            'connect_timeout'  => $timeout,
-            'debug'            => $debug,
-            'verify'           => $verifySsl,
+            'verify_peer'      => $verifySsl,
+            'verify_host'      => $verifySsl,
         ]);
     }
 
     /**
-     * Overrides base class request method to automatically add authentication options to request.
+     * @throws TransportExceptionInterface
      */
-    public function request(string $method, $uri = '', array $options = [] ): ResponseInterface
+    public function request(string $method, $uri = '', array $options = []): ResponseInterface
     {
-        //
-        // Add authentication options
-        //
+
+        if (!isset($options['headers'])) {
+            $options['headers'] = [];
+        }
 
         // Username and password
         if (
             !empty( $this->authentication_options['username'] )
             && !empty( $this->authentication_options['password'] )
         ) {
-            $options['auth'] = [
+            $options['auth_basic'] = [
                 $this->authentication_options['username'],
                 $this->authentication_options['password'],
             ];
         }
+
         // HTTP token
         else if ( !empty( $this->authentication_options['http_token'] ) ) {
             $options['headers']['Authorization']
@@ -177,16 +182,6 @@ class HTTPClient extends \GuzzleHttp\Client implements HTTPClientInterface
             throw new \RuntimeException('No authentication options available');
         }
 
-        try {
-            $response = parent::request( $method, $uri, $options );
-        }
-        catch ( \GuzzleHttp\Exception\TransferException $e ) {
-            if (method_exists($e, 'hasResponse') && $e->hasResponse()) {
-                return $e->getResponse();
-            }
-            throw $e;
-        }
-
-        return $response;
+        return $this->client->request($method, $uri, $options);
     }
 }

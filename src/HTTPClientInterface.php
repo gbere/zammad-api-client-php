@@ -2,7 +2,7 @@
 
 namespace ZammadAPIClient;
 
-use Psr\Http\Message\ResponseInterface;
+use Symfony\Contracts\HttpClient\ResponseInterface;
 
 interface HTTPClientInterface
 {
