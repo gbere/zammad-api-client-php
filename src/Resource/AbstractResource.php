@@ -7,6 +7,7 @@
 
 namespace ZammadAPIClient\Resource;
 
+use ZammadAPIClient\Client;
 use ZammadAPIClient\Exception\AlreadyFetchedObjectException;
 
 abstract class AbstractResource
@@ -26,7 +27,7 @@ abstract class AbstractResource
     /**
      * @param object $client        ZammadAPIClient object
      */
-    public function __construct( \ZammadAPIClient\Client $client )
+    public function __construct( Client $client )
     {
         $this->client = $client;
     }
@@ -386,7 +387,7 @@ abstract class AbstractResource
      * @return mixed                        Returns array of ZammadAPIClient\Resource\... objects
      *                                          or this object on failure.
      */
-    public function search( $search_term, $page = null, $objects_per_page = null )
+    public function search($search_term, $page = null, $objects_per_page = null, $extraUrlParameters = [])
     {
         if ( !empty( $this->getValues() ) ) {
             throw new AlreadyFetchedObjectException('Object already contains values, search() not possible, use a new object');
@@ -406,7 +407,7 @@ abstract class AbstractResource
         }
 
         if ( !isset($page) || !isset($objects_per_page) ) {
-            return $this->searchWithoutPagination($search_term);
+            return $this->searchWithoutPagination($search_term, $extraUrlParameters);
         }
 
         $url_parameters = [
@@ -418,6 +419,8 @@ abstract class AbstractResource
             $url_parameters['page']     = $page;
             $url_parameters['per_page'] = $objects_per_page;
         }
+
+        $url_parameters = array_merge($url_parameters, $extraUrlParameters);
 
         $url      = $this->getURL('search');
         $response = $this->getClient()->get(
@@ -444,6 +447,11 @@ abstract class AbstractResource
         return $objects;
     }
 
+    public function searchAll($search_term, $extraUrlParameters = [])
+    {
+        return $this->search($search_term, $page = null, $objects_per_page = null, $extraUrlParameters);
+    }
+
     /**
      * Fetches object data for searched objects of this type.
      * This method will be used internally and automatically by search() to automate pagination
@@ -452,7 +460,7 @@ abstract class AbstractResource
      * @return mixed                        Returns array of ZammadAPIClient\Resource\... objects
      *                                          or this object on failure.
      */
-    private function searchWithoutPagination($search_term)
+    private function searchWithoutPagination($search_term, array $extraUrlParameters = [])
     {
         $page             = 1;
         $objects_per_page = 100;
@@ -460,7 +468,7 @@ abstract class AbstractResource
         $objects_of_page  = [];
 
         do {
-            $objects_of_page = $this->search( $search_term, $page, $objects_per_page );
+            $objects_of_page = $this->search($search_term, $page, $objects_per_page, $extraUrlParameters);
             if ( !is_array($objects_of_page) ) {
                 return $this;
             }
