@@ -21,7 +21,7 @@ class Client
     /**
      * Creates a Client object.
      *
-     * @param Array $options                    Options to use for client:
+     * @paramarray $options                    Options to use for client:
      *                                          $options = [
      *                                              // URL of Zammad
      *                                              'url' => 'https://my.zammad.com:3000',
@@ -57,7 +57,7 @@ class Client
      *
      * @param String $method         GET, PUT, POST, DELETE
      * @param String $url            E. g. tickets/1
-     * @param Array  $url_parameters E. g. [ 'expand' => true, ]
+     * @paramarray  $url_parameters E. g. [ 'expand' => true, ]
      *
      * @return Response object
      */
@@ -84,12 +84,7 @@ class Client
         }
 
         // Turn HTTP client's response into our own.
-        $response = new Response(
-            $http_client_response->getStatusCode(),
-            $http_client_response->getReasonPhrase(),
-            $http_client_response->getBody(),
-            $http_client_response->getHeaders()
-        );
+        $response = new Response($http_client_response);
 
         $this->setLastResponse($response);
 
@@ -100,7 +95,7 @@ class Client
      * Executes GET request.
      *
      * @param String $url            E. g. tickets/1
-     * @param Array  $url_parameters E. g. [ 'expand' => true, ]
+     * @paramarray  $url_parameters E. g. [ 'expand' => true, ]
      *
      * @return Response object
      */
@@ -119,8 +114,8 @@ class Client
      * Executes POST request.
      *
      * @param String $url            E. g. tickets/1
-     * @param Array $data            Array with data to send as JSON.
-     * @param Array  $url_parameters E. g. [ 'expand' => true, ]
+     * @paramarray $data           array with data to send as JSON.
+     * @paramarray  $url_parameters E. g. [ 'expand' => true, ]
      *
      * @return Response object
      */
@@ -140,8 +135,8 @@ class Client
      * Executes PUT request.
      *
      * @param String $url            E. g. tickets/1
-     * @param Array $data            Array with data to send as JSON.
-     * @param Array  $url_parameters E. g. [ 'expand' => true, ]
+     * @paramarray $data           array with data to send as JSON.
+     * @paramarray  $url_parameters E. g. [ 'expand' => true, ]
      *
      * @return Response object
      */
@@ -161,7 +156,7 @@ class Client
      * Executes DELETE request.
      *
      * @param String $url            E. g. tickets/1
-     * @param Array  $url_parameters E. g. [ 'expand' => true, ]
+     * @paramarray  $url_parameters E. g. [ 'expand' => true, ]
      *
      * @return Response object
      */

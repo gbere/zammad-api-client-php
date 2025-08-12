@@ -22,7 +22,7 @@ class HTTPClient implements ZammadHTTPClientInterface
     /**
      * Creates an HTTPClient object.
      *
-     * @param Array $options                    Options to use for client:
+     * @paramarray $options                    Options to use for client:
      *                                          $options = [
      *                                              // URL of Zammad
      *                                              'url' => 'https://my.zammad.com:3000',

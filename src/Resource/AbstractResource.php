@@ -68,7 +68,7 @@ abstract class AbstractResource
     /**
      * Fetches remote data that was returned by Zammad.
      *
-     * @return array Array with the object's data. Might be empty.
+     * @return arrayarray with the object's data. Might be empty.
      */
     protected function getRemoteData()
     {
@@ -139,7 +139,7 @@ abstract class AbstractResource
      * Local values will be merged with remote data, where local values overwrite remote data.
      * This ensures that values can be returned that haven't been changed locally.
      *
-     * @return mixed        Array with values of object.
+     * @return mixed       array with values of object.
      */
     public function getValues()
     {
@@ -150,7 +150,7 @@ abstract class AbstractResource
     /**
      * Gets all unsaved values of object.
      *
-     * @return mixed        Array with unsaved values of object.
+     * @return mixed       array with unsaved values of object.
      */
     public function getUnsavedValues()
     {
@@ -609,7 +609,7 @@ abstract class AbstractResource
      * Returns the URL for the given method name, including its replaced placeholders.
      *
      * @param string $method_name               E. g. 'get', 'all', etc.
-     * @param array  $placeholder_values        Array of placeholder => value pairs,
+     * @param array  $placeholder_values       array of placeholder => value pairs,
      *                                              e. g. [ 'object_id' => 2 ] will replace
      *                                              {object_id} in URL with 2.
      *

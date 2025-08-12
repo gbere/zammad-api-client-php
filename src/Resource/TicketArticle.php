@@ -23,7 +23,7 @@ class TicketArticle extends AbstractResource
      *
      * @param integer $ticket_id      ID of ticket to fetch article data for.
      *
-     * @return array                Array of TicketArticle objects.
+     * @return array               array of TicketArticle objects.
      */
     public function getForTicket($ticket_id)
     {
