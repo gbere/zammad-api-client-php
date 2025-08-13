@@ -2,6 +2,62 @@
 
 This client can be used to access the API of the open source helpdesk [Zammad](http://www.zammad.org) via PHP.
 
+## FORK explanation
+
+The motivation for creating this fork is to replace `guzzlehttp/guzzle` with `symfony/http-client` and to enable the use of additional parameters such as `sort_by` and `order_by` when querying the Zammad API, while striving to maintain maximum compatibility with `zammad/zammad-api-client-php`.
+
+### Symfony HTTP Client profiler
+
+Removed the debug parameter. Now, when using Symfony’s profiler, HTTP Client debug information will always be displayed, provided that an `HttpClientInterface` is injected.
+
+```php
+...
+
+use Symfony\Contracts\HttpClient\HttpClientInterface;
+use ZammadAPIClient\Client;
+use ZammadAPIClient\HTTPClient;
+
+...
+
+public function __construct(
+    private readonly HttpClientInterface $httpClient,
+) {}
+    
+...
+
+$options = [
+    'url'           => 'https://myzammad.com', // URL to your Zammad installation
+    'username'      => 'myuser@myzammad.com',  // Username to use for authentication
+    'password'      => 'mypassword',           // Password to use for authentication
+    // 'verify'        => true,                // Enabled SSL verification. You can also give 
+];
+
+// It’s not the most elegant solution, but it’s the trade-off for maintaining compatibility.
+$client = new Client($options, new HTTPClient($options, $this->httpClient));
+
+// If you don’t need the Symfony profiler, you can create the client the same way as before.
+$client = new Client($options);
+
+```
+
+### Additional parameters
+
+In the `resources`, you can now add additional parameters such as `sort_by`, `order_by`, or any other supported by Zammad.
+
+```php
+$ticketResource->search("updated_at:>now-120m", null, null, [
+    'sort_by' => 'updated_at',
+    'order_by' => 'desc',
+]); 
+
+// To simplify retrieving all results in a single query, a new helper named searchAll has been created.
+$ticketResource->searchAll("updated_at:>now-120m", [
+    'sort_by' => 'updated_at',
+    'order_by' => 'desc',
+]);
+
+```
+
 ## Zammad version support
 This client supports Zammad 3.4.1 and newer.
 
