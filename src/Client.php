@@ -37,9 +37,6 @@ class Client
      *                                              // Optional: timeout (in seconds) for requests, defaults to 5
      *                                              // 0: no timeout
      *                                              timeout => 10,
-     *
-     *                                              // Optional: Enable debug output
-     *                                              debug => true,
      *                                          ];
      */
     public function __construct( array $options = [], HTTPClientInterface $client = null)

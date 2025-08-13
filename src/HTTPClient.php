@@ -38,9 +38,6 @@ class HTTPClient implements ZammadHTTPClientInterface
      *                                              // 0: no timeout
      *                                              'timeout' => 10,
      *
-     *                                              // Optional: Enable debug output
-     *                                              'debug' => true,
-     *
      *                                              // Optional: Enable SSL verification (defaults to true).
      *                                              // You can also give a path to a CA bundle file.
      *                                              'verify' => true,
@@ -115,12 +112,6 @@ class HTTPClient implements ZammadHTTPClientInterface
             }
         }
 
-        // Debug flag
-        $debug = false;
-        if ( array_key_exists( 'debug', $options ) ) {
-            $debug = $options['debug'] ? true : false;
-        }
-
         // Verify ssl
         $verifySsl = true;
         if (
@@ -142,9 +133,6 @@ class HTTPClient implements ZammadHTTPClientInterface
             'verify_peer' => $verifySsl,
             'verify_host' => $verifySsl,
         ];
-        if ($debug) {
-            $symfonyClientOptions['debug'] = true;
-        }
 
         if ($this->client) {
             $this->client = $this->client->withOptions($symfonyClientOptions);
@@ -158,7 +146,6 @@ class HTTPClient implements ZammadHTTPClientInterface
      */
     public function request(string $method, $uri = '', array $options = []): ResponseInterface
     {
-
         if (!isset($options['headers'])) {
             $options['headers'] = [];
         }
